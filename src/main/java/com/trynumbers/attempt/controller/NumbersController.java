@@ -14,15 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.trynumbers.attempt.entity.MyNumber;
 import com.trynumbers.attempt.exceptions.NumberNotFoundException;
-import com.trynumbers.attempt.service.NumberServiceImpl;
+import com.trynumbers.attempt.service.NumberService;
+import com.trynumbers.attempt.service.NumberService;
 
 @RestController
 public class NumbersController {
 	
-	private final NumberServiceImpl service;
+	private final NumberService service;
 
 	@Autowired
-	public NumbersController(NumberServiceImpl service) {
+	public NumbersController(NumberService service) {
 		this.service = service;
 	}
 	
