@@ -1,6 +1,6 @@
 package com.trynumbers.attempt.exceptions;
 
-public class NumberNotFoundException extends Exception{
+public class NumberNotFoundException extends RuntimeException{
 
 	/**
 	 * 
