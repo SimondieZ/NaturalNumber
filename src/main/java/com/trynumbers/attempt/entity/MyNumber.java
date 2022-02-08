@@ -7,8 +7,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+
+import com.vladmihalcea.hibernate.type.array.IntArrayType;
+
 @Entity
 @Table(name = "numbers")
+@TypeDefs({
+	@TypeDef(name = "int-array", typeClass = IntArrayType.class)
+})
 public class MyNumber {
 
 	@Id
@@ -28,21 +37,24 @@ public class MyNumber {
 	@Column(name = "description")
 	private String description;
 	
+	@Type(type = "int-array")
+	@Column(name = "divisors", columnDefinition = "integer[]")
+	private int[] divisors;
+	
 
 	public MyNumber() {
 		super();
 	}
 
 
-	public MyNumber(long name, String romaNotation, String binaryNotation, String description) {
+	public MyNumber(long name, String romaNotation, String binaryNotation, String description, int[] divisors) {
 		super();
 		this.name = name;
 		this.romaNotation = romaNotation;
 		this.binaryNotation = binaryNotation;
 		this.description = description;
+		this.divisors = divisors;
 	}
-
-	
 
 
 	public long getName() {
@@ -85,7 +97,19 @@ public class MyNumber {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
+
+
+	public int[] getDivisors() {
+		return divisors;
+	}
+
+
+	public void setDivisors(int[] divisors) {
+		this.divisors = divisors;
+	}
+
+
+
 	
 	
 }
