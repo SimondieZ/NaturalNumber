@@ -1,6 +1,7 @@
 package com.trynumbers.attempt.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,14 +47,18 @@ public class NumbersController {
 	}
 
 	@GetMapping("/numbers/{id}")
-	public EntityModel<MyNumber> getNumberById(@PathVariable long id) throws NumberNotFoundException {
-		MyNumber number = service.getNumberById(id);
-		return assembler.toModel(number);
+	public EntityModel<MyNumber> getNumberById(@PathVariable long id) {
+		Optional<MyNumber> number = service.getNumberById(id);
+		if(number.isPresent()) {
+			return assembler.toModel(number.get());
+		} else
+			throw new NumberNotFoundException(id);	
 	}
 
 	@PostMapping("/numbers")
 	public ResponseEntity<EntityModel<MyNumber>> addNewNumber(@RequestBody MyNumber number) {
-		EntityModel<MyNumber> entityModel = assembler.toModel(service.saveNewNumber(number));
+		MyNumber updatedNumber = service.saveNewNumber(number);
+		EntityModel<MyNumber> entityModel = assembler.toModel(updatedNumber);
 		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
 	}
 

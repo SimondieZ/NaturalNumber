@@ -1,20 +1,18 @@
 package com.trynumbers.attempt.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.trynumbers.attempt.entity.MyNumber;
-import com.trynumbers.attempt.exceptions.NumberNotFoundException;
 import com.trynumbers.attempt.repository.NumberRepository;
 
-
 @Service
-public class NumberServiceImpl implements NumberService{
+public class NumberServiceImpl implements NumberService {
 
 	private final NumberRepository numRepos;
-	
 
 	@Autowired
 	public NumberServiceImpl(NumberRepository numRepos) {
@@ -25,38 +23,37 @@ public class NumberServiceImpl implements NumberService{
 	public List<MyNumber> getAllNumbers() {
 		return numRepos.findAll();
 	}
-	
-	
+
 	@Override
-	public MyNumber getNumberById(long id) throws NumberNotFoundException {
-		return numRepos.findById(id).orElseThrow(() -> new NumberNotFoundException(id));
+	public Optional<MyNumber> getNumberById(long id) {
+		return numRepos.findById(id);
 	}
-	
 
 	@Override
 	public MyNumber saveNewNumber(MyNumber number) {
 		return numRepos.save(number);
 	}
-	
-	
+
 	@Override
 	public MyNumber replaceMyNymber(MyNumber newNumber, long id) {
-		return numRepos.findById(id).map(number -> {
+
+		Optional<MyNumber> optNumber = numRepos.findById(id);
+		if (optNumber.isPresent()) {
+			MyNumber number = optNumber.get();
 			number.setName(newNumber.getName());
 			number.setBinaryNotation(newNumber.getBinaryNotation());
 			number.setRomaNotation(newNumber.getRomaNotation());
 			number.setDescription(newNumber.getDescription());
 			number.setDivisors(newNumber.getDivisors());
 			return numRepos.save(number);
-		}).orElseGet(() -> {
+		} else {
 			return numRepos.save(newNumber);
-		});
+		}
 	}
-	
-	
+
 	@Override
 	public void deleteMyNumber(long id) {
 		numRepos.deleteById(id);
 	}
-	
+
 }

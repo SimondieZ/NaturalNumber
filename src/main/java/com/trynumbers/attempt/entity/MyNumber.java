@@ -1,5 +1,7 @@
 package com.trynumbers.attempt.entity;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,21 +44,68 @@ public class MyNumber {
 	private int[] divisors;
 	
 
-	public MyNumber() {
+	protected MyNumber() {
 		super();
 	}
-
-
-	public MyNumber(long name, String romaNotation, String binaryNotation, String description, int[] divisors) {
+	
+	private MyNumber(MyNumberBuilder myNumberBuilder) {
 		super();
-		this.name = name;
-		this.romaNotation = romaNotation;
-		this.binaryNotation = binaryNotation;
-		this.description = description;
-		this.divisors = divisors;
+		this.id = myNumberBuilder.id;
+		this.name = myNumberBuilder.name;
+		this.romaNotation = myNumberBuilder.romaNotation;
+		this.binaryNotation = myNumberBuilder.binaryNotation;
+		this.description = myNumberBuilder.description;
+		this.divisors = myNumberBuilder.divisors;
 	}
 
+	public static class MyNumberBuilder {
+		private long id;
+		private long name;
+		private String romaNotation;
+		private String binaryNotation;
+		private String description;
+		private int[] divisors;
 
+		public MyNumberBuilder() {
+		}
+
+		public MyNumberBuilder id(long id) {
+			this.id = id;
+			return this;
+		}
+
+		public MyNumberBuilder name(long name) {
+			this.name = name;
+			return this;
+		}
+
+		public MyNumberBuilder romaNotation(String romaNotation) {
+			this.romaNotation = romaNotation;
+			return this;
+		}
+
+		public MyNumberBuilder binaryNotation(String binaryNotation) {
+			this.binaryNotation = binaryNotation;
+			return this;
+		}
+
+		public MyNumberBuilder description(String description) {
+			this.description = description;
+			return this;
+		}
+
+		public MyNumberBuilder divisors(int[] divisors) {
+			this.divisors = divisors;
+			return this;
+		}
+
+		public MyNumber build() {
+			MyNumber number = new MyNumber(this);
+			return number;
+		}
+
+	}
+	
 	public long getName() {
 		return name;
 	}
@@ -109,7 +158,59 @@ public class MyNumber {
 	}
 
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((binaryNotation == null) ? 0 : binaryNotation.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + Arrays.hashCode(divisors);
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + (int) (name ^ (name >>> 32));
+		result = prime * result + ((romaNotation == null) ? 0 : romaNotation.hashCode());
+		return result;
+	}
 
-	
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MyNumber other = (MyNumber) obj;
+		if (binaryNotation == null) {
+			if (other.binaryNotation != null)
+				return false;
+		} else if (!binaryNotation.equals(other.binaryNotation))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (!Arrays.equals(divisors, other.divisors))
+			return false;
+		if (id != other.id)
+			return false;
+		if (name != other.name)
+			return false;
+		if (romaNotation == null) {
+			if (other.romaNotation != null)
+				return false;
+		} else if (!romaNotation.equals(other.romaNotation))
+			return false;
+		return true;
+	}
+
+
+	@Override
+	public String toString() {
+		return "MyNumber [id=" + id + ", name=" + name + ", romaNotation=" + romaNotation + ", binaryNotation="
+				+ binaryNotation + ", description=" + description + ", divisors=" + Arrays.toString(divisors) + "]";
+	}
+
+
 }
