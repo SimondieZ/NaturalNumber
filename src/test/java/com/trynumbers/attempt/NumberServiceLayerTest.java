@@ -5,17 +5,18 @@ import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.trynumbers.attempt.entity.MyNumber;
 import com.trynumbers.attempt.repository.NumberRepository;
 import com.trynumbers.attempt.service.NumberService;
+import com.trynumbers.attempt.service.NumberServiceImpl;
 import com.trynumbers.utility.MyNumbersUtility;
 
 @SpringBootTest
@@ -25,8 +26,12 @@ public class NumberServiceLayerTest {
 	@MockBean
 	private NumberRepository numberRepository;
 
-	@Autowired
 	private NumberService underTestNumberService;
+
+	@BeforeEach
+	public void setUp() {
+		underTestNumberService = new NumberServiceImpl(numberRepository);
+	}
 
 	@Test
 	public void canCallGetAllNumbersFromRepositoryForGetHTTP() {
