@@ -19,6 +19,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -38,14 +40,18 @@ public class NumbersResourceTest {
 	private NumberService numberService;
 	@SpyBean
 	private NumberModelAssembler assembler;
+	@MockBean
+	private UserDetailsService userDetailsService;
 
 	@Autowired
 	private MockMvc mvc;
 
     @Autowired
     private ObjectMapper objectMapper;
+    
 	
 	@Test
+	@WithMockUser(authorities = "developers:read")
 	void shouldGetListOfNumbers() throws Exception {
 		
 		List<MyNumber> numbers = MyNumbersUtility.createListWithThreeNumbers();
@@ -59,6 +65,7 @@ public class NumbersResourceTest {
 	}
 	
 	@Test
+	@WithMockUser(authorities = "developers:read")
 	void shouldGetNumberById() throws Exception {
 		
 		long numberId=3;
@@ -81,6 +88,7 @@ public class NumbersResourceTest {
 	}
 	
 	@Test
+	@WithMockUser(authorities = "developers:read")
 	void shouldReturn404StatusWhenGetNumberByIdIsNotPresent() throws Exception {
 		
 		long someId = 3;
@@ -95,6 +103,7 @@ public class NumbersResourceTest {
 	}
 	
     @Test
+    @WithMockUser(authorities = "developers:write")
     void givenNumber_whenAdd_thenStatus201andNumberReturned() throws Exception {
     	
     	MyNumber numberThree = MyNumbersUtility.createMyNumberInstance();
@@ -110,6 +119,7 @@ public class NumbersResourceTest {
     }
 
     @Test
+    @WithMockUser(authorities = "developers:write")
     void giveNumber_whenUpdate_thenStatus201andUpdatedReturns() throws Exception {
     		
     	MyNumber rewritableNumber = new MyNumber.MyNumberBuilder()							// without id (to create or replace)
@@ -138,6 +148,7 @@ public class NumbersResourceTest {
     }
     
     @Test
+    @WithMockUser(authorities = "developers:write")
 	void givenNumber_whenDelete_thenStatus204() throws Exception {
 
 		long numberIdToDelete = 3;

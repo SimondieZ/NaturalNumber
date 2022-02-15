@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.trynumbers.attempt.entity.MyNumber;
 
 @Repository
-public interface NumberRepository extends JpaRepository<MyNumber, Long>{
+public interface NumberRepository extends JpaRepository<MyNumber, Long> {
 
 }

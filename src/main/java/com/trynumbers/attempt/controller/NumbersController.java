@@ -9,6 +9,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,15 +39,18 @@ public class NumbersController {
 	}
 
 	@GetMapping("/numbers")
+	@PreAuthorize("hasAuthority('developers:read')")
 	public CollectionModel<EntityModel<MyNumber>> getAllNumbers() {
 		List<MyNumber> allNumbers = service.getAllNumbers();
-		List<EntityModel<MyNumber>> listOfHateOasNumbers = allNumbers.stream().map(assembler::toModel)
+		List<EntityModel<MyNumber>> listOfHateOasNumbers = allNumbers.stream()
+				.map(assembler::toModel)
 				.collect(Collectors.toList());
 		return CollectionModel.of(listOfHateOasNumbers,
 				linkTo(methodOn(NumbersController.class).getAllNumbers()).withSelfRel());
 	}
 
 	@GetMapping("/numbers/{id}")
+	@PreAuthorize("hasAuthority('developers:read')")
 	public EntityModel<MyNumber> getNumberById(@PathVariable long id) {
 		Optional<MyNumber> number = service.getNumberById(id);
 		if(number.isPresent()) {
@@ -56,13 +60,17 @@ public class NumbersController {
 	}
 
 	@PostMapping("/numbers")
+	@PreAuthorize("hasAuthority('developers:write')")
 	public ResponseEntity<EntityModel<MyNumber>> addNewNumber(@RequestBody MyNumber number) {
 		MyNumber updatedNumber = service.saveNewNumber(number);
 		EntityModel<MyNumber> entityModel = assembler.toModel(updatedNumber);
-		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+		
+		return ResponseEntity
+				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
 	}
 
 	@PutMapping("/numbers/{id}")
+	@PreAuthorize("hasAuthority('developers:write')")
 	public ResponseEntity<EntityModel<MyNumber>> replaceMyNumber(@RequestBody MyNumber newNumber, @PathVariable long id) {
 		MyNumber updatedNumber = service.replaceMyNymber(newNumber, id);
 		EntityModel<MyNumber> entityModel = assembler.toModel(updatedNumber);
@@ -72,6 +80,7 @@ public class NumbersController {
 	}
 
 	@DeleteMapping("/numbers/{id}")
+	@PreAuthorize("hasAuthority('developers:write')")
 	public ResponseEntity<Object> deleteMyNumber(@PathVariable long id) {
 		service.deleteMyNumber(id);
 		return ResponseEntity.noContent().build();

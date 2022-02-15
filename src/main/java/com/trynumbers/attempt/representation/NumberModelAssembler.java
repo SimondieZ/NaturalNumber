@@ -11,7 +11,7 @@ import com.trynumbers.attempt.controller.NumbersController;
 import com.trynumbers.attempt.entity.MyNumber;
 
 @Component
-public class NumberModelAssembler implements RepresentationModelAssembler<MyNumber, EntityModel<MyNumber>>{
+public class NumberModelAssembler implements RepresentationModelAssembler<MyNumber, EntityModel<MyNumber>> {
 
 	@Override
 	public EntityModel<MyNumber> toModel(MyNumber number) {

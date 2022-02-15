@@ -1,6 +1,8 @@
 package com.trynumbers.attempt.logging;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class LoggingHandler {
+	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
     
@@ -25,25 +28,39 @@ public class LoggingHandler {
      * @return result
      * @throws Throwable throws IllegalArgumentException
      */
-    @Around("LoggingPointcuts.applicationPackagePointcut() && LoggingPointcuts.springBeanPointcut()")
-    public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        if (log.isDebugEnabled()) {
-            log.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.getSignature().getDeclaringTypeName(),
-                joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
-        }
-        try {
-            Object result = joinPoint.proceed();
-            if (log.isDebugEnabled()) {
-                log.debug("Exit: {}.{}() with result = {}", joinPoint.getSignature().getDeclaringTypeName(),
-                    joinPoint.getSignature().getName(), result);
-            }
-            return result;
-        } catch (Exception e) {
-        	log.error("Exception in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
-                    joinPoint.getSignature().getName(), e.getClass());
-            throw e;
-        }
-    }
+	@Around("LoggingPointcuts.applicationPackagePointcut() && LoggingPointcuts.springBeanPointcut()")
+	public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
+		if (log.isDebugEnabled()) {
+			log.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.getSignature().getDeclaringTypeName(),
+					joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
+		}
+		try {
+			Object result = joinPoint.proceed();
+			if (log.isDebugEnabled()) {
+				log.debug("Exit: {}.{}() with result = {}", joinPoint.getSignature().getDeclaringTypeName(),
+						joinPoint.getSignature().getName(), result);
+				log.debug("With result: ");
+				if (result instanceof List) {
+					List numbers = (List) result;
+					numbers.forEach(num -> log.debug(num.toString()));
+				} else {
+					log.debug("{}", result);
+				}
+
+			}
+			return result;
+		} catch (Exception e) {
+			log.error("Exception in {}.{}() with type {}", joinPoint.getSignature().getDeclaringTypeName(),
+					joinPoint.getSignature().getName(), e.getClass());
+			log.error("Error message: {}", e.getMessage());
+
+			List<StackTraceElement> stackTrace = Arrays.stream(e.getStackTrace()).collect(Collectors.toList());
+			log.error("Exception stacktrace: ");
+			stackTrace.forEach((methodCall) -> log.error(methodCall.toString()));
+
+			throw e;
+		}
+	}
 	
 	@Around("LoggingPointcuts.allServiceMethods()")
 	public Object logAroundAllServiceMethods(ProceedingJoinPoint proceedingJP) throws Throwable {
@@ -61,14 +78,16 @@ public class LoggingHandler {
 			long begin = System.currentTimeMillis();
 			targetMethodResult = proceedingJP.proceed();
 			long end = System.currentTimeMillis();
-			log.debug("The class name of the returned value : " + targetMethodResult.getClass());
+
+			if (!methodSignature.getName().equals("deleteMyNumber"))
+				log.debug("The class name of the returned value : " + targetMethodResult.getClass());
+
 			log.debug("Method " + methodSignature.getName() + " has completed successfully!");
 			log.debug("Method execution time: " + (end - begin) + "ms");
 		} catch (Exception e) {
 			log.warn("Method " + methodSignature.getName() + " has completed unsuccessfully!");
 			throw e;
-		} 	
-		finally {
+		} finally {
 			log.debug("------------------------------------------------------------");
 		}
 		return targetMethodResult;
