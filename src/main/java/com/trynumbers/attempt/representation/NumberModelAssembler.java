@@ -10,9 +10,21 @@ import org.springframework.stereotype.Component;
 import com.trynumbers.attempt.controller.NumbersController;
 import com.trynumbers.attempt.entity.MyNumber;
 
+
+/**
+ * Class for components that convert MyNumber type into a RepresentationModel.
+ * 
+ * @author Serafim Sokhin
+ */
 @Component
 public class NumberModelAssembler implements RepresentationModelAssembler<MyNumber, EntityModel<MyNumber>> {
 
+	
+	/**
+	 * Wraps MyNumber into EntityModel type.
+	 * @param number MyNumber entity
+	 * @return entity model of MyNumber
+	 */
 	@Override
 	public EntityModel<MyNumber> toModel(MyNumber number) {
 		return EntityModel.of(number,

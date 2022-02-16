@@ -1,6 +1,7 @@
 package com.trynumbers.attempt.security;
 
 import java.util.Collection;
+
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -9,10 +10,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.trynumbers.attempt.entity.User;
 
+/**
+ * Provides core user information.
+ * @author Serafim Sokhin
+ */
 public class SecurityUser implements UserDetails {
 
-
 	private static final long serialVersionUID = 1L;
+	
 	private final String username;
 	private final String password;
 	private final List<SimpleGrantedAuthority> authorites;
@@ -68,10 +73,20 @@ public class SecurityUser implements UserDetails {
 		return isActive;
 	}
 
+	/**
+	 * Construct the User with the details required by {@link org.springframework.security.authentication.dao.DaoAuthenticationProvider DaoAuthenticationProvider}.
+	 * @param user User retrieved from {@link com.trynumbers.attempt.repository.UserRepository UserRepository}
+	 * @return UserDetails from user
+	 */
 	public static UserDetails fromUser(User user) {
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-				user.getStatus().equals(Status.ACTIVE), user.getStatus().equals(Status.ACTIVE),
-				user.getStatus().equals(Status.ACTIVE), user.getStatus().equals(Status.ACTIVE), user.getRole().getAuthorities());
+		return new org.springframework.security.core.userdetails.User(
+				user.getEmail(),
+				user.getPassword(),
+				user.getStatus().equals(Status.ACTIVE),
+				user.getStatus().equals(Status.ACTIVE),
+				user.getStatus().equals(Status.ACTIVE),
+				user.getStatus().equals(Status.ACTIVE), 
+				user.getRole().getAuthorities());
 	}
 
 }

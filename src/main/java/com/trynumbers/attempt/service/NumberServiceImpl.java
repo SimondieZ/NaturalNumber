@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.trynumbers.attempt.entity.MyNumber;
 import com.trynumbers.attempt.repository.NumberRepository;
 
-@Service("numberServiceImpl")
+@Service
 public class NumberServiceImpl implements NumberService {
 
 	private final NumberRepository numRepos;

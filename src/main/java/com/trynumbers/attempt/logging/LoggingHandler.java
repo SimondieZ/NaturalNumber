@@ -14,6 +14,13 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Component;
 
+import com.trynumbers.attempt.entity.MyNumber;
+
+/**
+ * Includes both AOP and logging functionality 
+ *
+ * @author Serafim Sokhin
+ */
 @Component
 @Aspect
 public class LoggingHandler {
@@ -22,11 +29,11 @@ public class LoggingHandler {
 
     
     /**
-     * Advice that logs when a method is entered and exited.
+     * Advice that logs when any method in @Repository, @Service or @Controller annotated class is entered and exited.
      *
-     * @param joinPoint join point for advice
-     * @return result
-     * @throws Throwable throws IllegalArgumentException
+     * @param joinPoint ProceedingJoinPoint for advice
+     * @return target method result
+     * @throws Throwable caught Exception 
      */
 	@Around("LoggingPointcuts.applicationPackagePointcut() && LoggingPointcuts.springBeanPointcut()")
 	public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -41,7 +48,7 @@ public class LoggingHandler {
 						joinPoint.getSignature().getName(), result);
 				log.debug("With result: ");
 				if (result instanceof List) {
-					List numbers = (List) result;
+					List<MyNumber> numbers = (List<MyNumber>) result;
 					numbers.forEach(num -> log.debug(num.toString()));
 				} else {
 					log.debug("{}", result);
@@ -62,6 +69,14 @@ public class LoggingHandler {
 		}
 	}
 	
+    
+    /**
+     * Advice that logs in detail when any method @Service annotated class is entered and exited.
+     *
+     * @param proceedingJP ProceedingJoinPoint for advice
+     * @return target method result
+     * @throws Throwable caught Exception 
+     */
 	@Around("LoggingPointcuts.allServiceMethods()")
 	public Object logAroundAllServiceMethods(ProceedingJoinPoint proceedingJP) throws Throwable {
 		log.debug("------------------------------------------------------------");
