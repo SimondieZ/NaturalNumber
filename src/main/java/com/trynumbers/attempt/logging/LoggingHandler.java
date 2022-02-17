@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Component;
 
-import com.trynumbers.attempt.entity.MyNumber;
+import com.trynumbers.attempt.entity.NaturalNumber;
 
 /**
  * Includes both AOP and logging functionality 
@@ -48,7 +48,7 @@ public class LoggingHandler {
 						joinPoint.getSignature().getName(), result);
 				log.debug("With result: ");
 				if (result instanceof List) {
-					List<MyNumber> numbers = (List<MyNumber>) result;
+					List<NaturalNumber> numbers = (List<NaturalNumber>) result;
 					numbers.forEach(num -> log.debug(num.toString()));
 				} else {
 					log.debug("{}", result);

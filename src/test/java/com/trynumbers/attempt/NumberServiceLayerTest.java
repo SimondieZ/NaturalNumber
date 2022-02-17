@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.trynumbers.attempt.entity.MyNumber;
+import com.trynumbers.attempt.entity.NaturalNumber;
 import com.trynumbers.attempt.repository.NumberRepository;
 import com.trynumbers.attempt.service.NumberService;
 import com.trynumbers.attempt.service.NumberServiceImpl;
@@ -53,13 +53,13 @@ public class NumberServiceLayerTest {
 	@Test
 	public void isTheEqualNumberPassedToTheRepositorySaveMethodForPostHTTP() {
 		// given
-		MyNumber numberThree = MyNumbersUtility.createMyNumberInstance();
-		ArgumentCaptor<MyNumber> numberArgumentCaptor = ArgumentCaptor.forClass(MyNumber.class);
+		NaturalNumber numberThree = MyNumbersUtility.createMyNumberInstance();
+		ArgumentCaptor<NaturalNumber> numberArgumentCaptor = ArgumentCaptor.forClass(NaturalNumber.class);
 		// when
 		underTestNumberService.saveNewNumber(numberThree);
 		// then
 		verify(numberRepository).save(numberArgumentCaptor.capture());
-		MyNumber captuderNumber = numberArgumentCaptor.getValue();
+		NaturalNumber captuderNumber = numberArgumentCaptor.getValue();
 		assertThat(captuderNumber).isEqualTo(numberThree);
 
 	}
@@ -69,19 +69,19 @@ public class NumberServiceLayerTest {
 		
 		long searchId = 3;
 		
-		MyNumber foundNumberById = MyNumbersUtility.createMyNumberInstance();
+		NaturalNumber foundNumberById = MyNumbersUtility.createMyNumberInstance();
 		
-		MyNumber numberToUpdate = MyNumbersUtility.createMyNumberInstance();				// an object with an empty id is passed to the request body, so it is set id to 0
+		NaturalNumber numberToUpdate = MyNumbersUtility.createMyNumberInstance();				// an object with an empty id is passed to the request body, so it is set id to 0
 		numberToUpdate.setId(0);
 		numberToUpdate.setDescription("Some changes to the found number description");
 
 		when(numberRepository.findById(anyLong())).thenReturn(Optional.of(foundNumberById));
-		ArgumentCaptor<MyNumber> numberArgumentCaptor = ArgumentCaptor.forClass(MyNumber.class);
+		ArgumentCaptor<NaturalNumber> numberArgumentCaptor = ArgumentCaptor.forClass(NaturalNumber.class);
 		// when
 		underTestNumberService.replaceMyNymber(numberToUpdate, searchId);
 		// then
 		verify(numberRepository, times(1)).save(numberArgumentCaptor.capture());
-		MyNumber captuderNumber = numberArgumentCaptor.getValue();
+		NaturalNumber captuderNumber = numberArgumentCaptor.getValue();
 
 		assertThat(captuderNumber).isNotEqualTo(numberToUpdate);
 	}
@@ -89,16 +89,16 @@ public class NumberServiceLayerTest {
 	@Test
 	public void whenPassedNumberDoesNotExsistInRepositoryItIsSavedForPutHTTP() {
 
-		MyNumber numberToUpdate = MyNumbersUtility.createMyNumberInstance();				
+		NaturalNumber numberToUpdate = MyNumbersUtility.createMyNumberInstance();				
 		numberToUpdate.setId(0);
 
 		when(numberRepository.findById(anyLong())).thenReturn(Optional.empty());
-		ArgumentCaptor<MyNumber> numberArgumentCaptor = ArgumentCaptor.forClass(MyNumber.class);
+		ArgumentCaptor<NaturalNumber> numberArgumentCaptor = ArgumentCaptor.forClass(NaturalNumber.class);
 		// when
 		underTestNumberService.replaceMyNymber(numberToUpdate, 5);
 		// then
 		verify(numberRepository, times(1)).save(numberArgumentCaptor.capture());
-		MyNumber captuderNumber = numberArgumentCaptor.getValue();
+		NaturalNumber captuderNumber = numberArgumentCaptor.getValue();
 
 		assertThat(captuderNumber).isEqualTo(numberToUpdate);
 	}

@@ -20,7 +20,7 @@ import com.vladmihalcea.hibernate.type.array.IntArrayType;
 @TypeDefs({
 	@TypeDef(name = "int-array", typeClass = IntArrayType.class)
 })
-public class MyNumber {
+public class NaturalNumber {
 
 	@Id
 	@Column(name = "id")
@@ -44,11 +44,11 @@ public class MyNumber {
 	private int[] divisors;
 	
 
-	protected MyNumber() {
+	protected NaturalNumber() {
 		super();
 	}
 	
-	private MyNumber(MyNumberBuilder myNumberBuilder) {
+	private NaturalNumber(NumberBuilder myNumberBuilder) {
 		super();
 		this.id = myNumberBuilder.id;
 		this.name = myNumberBuilder.name;
@@ -58,7 +58,7 @@ public class MyNumber {
 		this.divisors = myNumberBuilder.divisors;
 	}
 
-	public static class MyNumberBuilder {
+	public static class NumberBuilder {
 		private long id;
 		private long name;
 		private String romaNotation;
@@ -66,41 +66,41 @@ public class MyNumber {
 		private String description;
 		private int[] divisors;
 
-		public MyNumberBuilder() {
+		public NumberBuilder() {
 		}
 
-		public MyNumberBuilder id(long id) {
+		public NumberBuilder id(long id) {
 			this.id = id;
 			return this;
 		}
 
-		public MyNumberBuilder name(long name) {
+		public NumberBuilder name(long name) {
 			this.name = name;
 			return this;
 		}
 
-		public MyNumberBuilder romaNotation(String romaNotation) {
+		public NumberBuilder romaNotation(String romaNotation) {
 			this.romaNotation = romaNotation;
 			return this;
 		}
 
-		public MyNumberBuilder binaryNotation(String binaryNotation) {
+		public NumberBuilder binaryNotation(String binaryNotation) {
 			this.binaryNotation = binaryNotation;
 			return this;
 		}
 
-		public MyNumberBuilder description(String description) {
+		public NumberBuilder description(String description) {
 			this.description = description;
 			return this;
 		}
 
-		public MyNumberBuilder divisors(int[] divisors) {
+		public NumberBuilder divisors(int[] divisors) {
 			this.divisors = divisors;
 			return this;
 		}
 
-		public MyNumber build() {
-			MyNumber number = new MyNumber(this);
+		public NaturalNumber build() {
+			NaturalNumber number = new NaturalNumber(this);
 			return number;
 		}
 
@@ -180,7 +180,7 @@ public class MyNumber {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		MyNumber other = (MyNumber) obj;
+		NaturalNumber other = (NaturalNumber) obj;
 		if (binaryNotation == null) {
 			if (other.binaryNotation != null)
 				return false;

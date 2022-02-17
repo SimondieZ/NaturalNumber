@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.trynumbers.attempt.entity.MyNumber;
+import com.trynumbers.attempt.entity.NaturalNumber;
 import com.trynumbers.attempt.repository.NumberRepository;
 
 @Service
@@ -20,26 +20,26 @@ public class NumberServiceImpl implements NumberService {
 	}
 
 	@Override
-	public List<MyNumber> getAllNumbers() {
+	public List<NaturalNumber> getAllNumbers() {
 		return numRepos.findAll();
 	}
 
 	@Override
-	public Optional<MyNumber> getNumberById(long id) {
+	public Optional<NaturalNumber> getNumberById(long id) {
 		return numRepos.findById(id);
 	}
 
 	@Override
-	public MyNumber saveNewNumber(MyNumber number) {
+	public NaturalNumber saveNewNumber(NaturalNumber number) {
 		return numRepos.save(number);
 	}
 
 	@Override
-	public MyNumber replaceMyNymber(MyNumber newNumber, long id) {
+	public NaturalNumber replaceMyNymber(NaturalNumber newNumber, long id) {
 
-		Optional<MyNumber> optNumber = numRepos.findById(id);
+		Optional<NaturalNumber> optNumber = numRepos.findById(id);
 		if (optNumber.isPresent()) {
-			MyNumber number = optNumber.get();
+			NaturalNumber number = optNumber.get();
 			number.setName(newNumber.getName());
 			number.setBinaryNotation(newNumber.getBinaryNotation());
 			number.setRomaNotation(newNumber.getRomaNotation());

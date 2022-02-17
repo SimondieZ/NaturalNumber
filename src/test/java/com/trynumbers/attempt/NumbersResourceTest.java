@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trynumbers.attempt.controller.NumbersController;
-import com.trynumbers.attempt.entity.MyNumber;
+import com.trynumbers.attempt.entity.NaturalNumber;
 import com.trynumbers.attempt.representation.NumberModelAssembler;
 import com.trynumbers.attempt.service.NumberService;
 import com.trynumbers.utility.MyNumbersUtility;
@@ -57,14 +57,14 @@ public class NumbersResourceTest {
 	@WithMockUser(authorities = "developers:read")
 	void shouldGetListOfNumbers() throws Exception {
 		
-		List<MyNumber> numbers = MyNumbersUtility.createListWithThreeNumbers();
+		List<NaturalNumber> numbers = MyNumbersUtility.createListWithThreeNumbers();
 		
 		when(numberService.getAllNumbers()).thenReturn(numbers);
 		
-		mvc.perform(MockMvcRequestBuilders.get("/numbers"))
+		mvc.perform(MockMvcRequestBuilders.get("/api/v1/numbers"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaTypes.HAL_JSON))
-				.andExpect(jsonPath("$._embedded.myNumberList", Matchers.hasSize(3)));	
+				.andExpect(jsonPath("$._embedded.naturalNumberList", Matchers.hasSize(3)));	
 	}
 	
 	@Test
@@ -73,12 +73,12 @@ public class NumbersResourceTest {
 		
 		long numberId=3;
 		
-		MyNumber numberThree = MyNumbersUtility.createMyNumberInstance();
+		NaturalNumber numberThree = MyNumbersUtility.createMyNumberInstance();
 		JSONArray array = MyNumbersUtility.convertToJsonArray(numberThree.getDivisors());
 
 		when(numberService.getNumberById(numberId)).thenReturn(Optional.of(numberThree));
 		
-		mvc.perform(MockMvcRequestBuilders.get("/numbers/{id}", numberId))
+		mvc.perform(MockMvcRequestBuilders.get("/api/v1/numbers/{id}", numberId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaTypes.HAL_JSON))
                 .andExpect(jsonPath("$.id").value((int)numberId))
@@ -100,8 +100,9 @@ public class NumbersResourceTest {
 		
 		when(numberService.getNumberById(someId)).thenReturn(Optional.empty());
 		
-		mvc.perform(MockMvcRequestBuilders.get("/numbers/{id}", someId))
+		mvc.perform(MockMvcRequestBuilders.get("/api/v1/numbers/{id}", someId))
 				.andExpect(status().isNotFound())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.message", is(errorMessage)));
 	}
 	
@@ -109,10 +110,10 @@ public class NumbersResourceTest {
     @WithMockUser(authorities = "developers:write")
     void givenNumber_whenAdd_thenStatus201andNumberReturned() throws Exception {
     	
-    	MyNumber numberThree = MyNumbersUtility.createMyNumberInstance();
+    	NaturalNumber numberThree = MyNumbersUtility.createMyNumberInstance();
 		
-        when(numberService.saveNewNumber(Mockito.any(MyNumber.class))).thenReturn(numberThree);
-        mvc.perform(MockMvcRequestBuilders.post("/numbers")
+        when(numberService.saveNewNumber(Mockito.any(NaturalNumber.class))).thenReturn(numberThree);
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/numbers")
                         .content(objectMapper.writeValueAsString(numberThree))
                         .contentType(MediaType.APPLICATION_JSON)
                    )
@@ -125,7 +126,7 @@ public class NumbersResourceTest {
     @WithMockUser(authorities = "developers:write")
     void giveNumber_whenUpdate_thenStatus201andUpdatedReturns() throws Exception {
     		
-    	MyNumber rewritableNumber = new MyNumber.MyNumberBuilder()							// without id (to create or replace)
+    	NaturalNumber rewritableNumber = new NaturalNumber.NumberBuilder()							// without id (to create or replace)
 				.name(3)
 				.romaNotation("III")
 				.binaryNotation("3")
@@ -133,11 +134,11 @@ public class NumbersResourceTest {
 				.divisors(new int[] { 1, 3 })
 				.build();
 		
-    	MyNumber getFromDataBaseNumber = MyNumbersUtility.createMyNumberInstance();
+    	NaturalNumber getFromDataBaseNumber = MyNumbersUtility.createMyNumberInstance();
 		
         when(numberService.replaceMyNymber(rewritableNumber, 3)).thenReturn(getFromDataBaseNumber);
         
-        mvc.perform(MockMvcRequestBuilders.put("/numbers/{id}", 3)
+        mvc.perform(MockMvcRequestBuilders.put("/api/v1/numbers/{id}", 3)
                         .content(objectMapper.writeValueAsString(rewritableNumber))
                         .contentType(MediaType.APPLICATION_JSON)
                    )
@@ -150,12 +151,13 @@ public class NumbersResourceTest {
 	                .andExpect(jsonPath("$.divisors").value(MyNumbersUtility.convertToJsonArray(rewritableNumber.getDivisors())));
     }
     
-    @Test
-    @WithMockUser(authorities = "developers:write")
+	@Test
+	@WithMockUser(authorities = "developers:write")
 	void givenNumber_whenDelete_thenStatus204() throws Exception {
 
 		long numberIdToDelete = 3;
-		mvc.perform(MockMvcRequestBuilders.delete("/numbers/{id}", numberIdToDelete)).andExpect(status().isNoContent());
+		mvc.perform(MockMvcRequestBuilders.delete("/api/v1/numbers/{id}", numberIdToDelete))
+				.andExpect(status().isNoContent());
 		verify(numberService).deleteMyNumber(numberIdToDelete);
 
 	}

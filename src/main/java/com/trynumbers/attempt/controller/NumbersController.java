@@ -16,12 +16,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.trynumbers.attempt.entity.MyNumber;
+import com.trynumbers.attempt.entity.NaturalNumber;
+import com.trynumbers.attempt.exceptions.ErrorDetails;
 import com.trynumbers.attempt.exceptions.NumberNotFoundException;
 import com.trynumbers.attempt.representation.NumberModelAssembler;
 import com.trynumbers.attempt.service.NumberService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -36,6 +44,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
  * @author Serafim Sokhin
  */
 @RestController
+@RequestMapping("/api/v1/numbers")
+@Tag(name = "Number")
 public class NumbersController {
 
 	private final NumberService service;
@@ -54,11 +64,15 @@ public class NumbersController {
 	 * Requires an authorized user with read permission.
 	 * @return list of all numbers, wrapped in a collection model 
 	 */
-	@GetMapping("/numbers")
+	@Operation(summary = "Get all the numbers", responses = {
+			@ApiResponse(description = "Get all the numbers request was completed successfully", responseCode = "200",
+					content = @Content(mediaType = "application/hal+json", schema = @Schema(implementation = CollectionModel.class)))
+			})
+	@GetMapping
 	@PreAuthorize("hasAuthority('developers:read')")
-	public CollectionModel<EntityModel<MyNumber>> getAllNumbers() {
-		List<MyNumber> allNumbers = service.getAllNumbers();
-		List<EntityModel<MyNumber>> listOfHateOasNumbers = allNumbers.stream()
+	public CollectionModel<EntityModel<NaturalNumber>> getAllNumbers() {
+		List<NaturalNumber> allNumbers = service.getAllNumbers();
+		List<EntityModel<NaturalNumber>> listOfHateOasNumbers = allNumbers.stream()
 				.map(assembler::toModel)
 				.collect(Collectors.toList());
 		return CollectionModel.of(listOfHateOasNumbers,
@@ -72,10 +86,18 @@ public class NumbersController {
 	 * @return  number with passed id, wrapped in an entity model
 	 * @throws  NumberNotFoundException if number with passed id doesn't exist
 	 */
-	@GetMapping("/numbers/{id}")
+	@Operation(summary = "Get number by id", responses = {
+			@ApiResponse(description = "Number was found successfully", responseCode = "200", 
+					content = @Content(mediaType = "application/hal+json", schema = @Schema(implementation = EntityModel.class))),
+			@ApiResponse(description = "Number not found.", responseCode = "404",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetails.class))),
+			@ApiResponse(description = "Internal Server Error.", responseCode = "500",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetails.class)))
+			})
+	@GetMapping("/{id}")
 	@PreAuthorize("hasAuthority('developers:read')")
-	public EntityModel<MyNumber> getNumberById(@PathVariable long id) {
-		Optional<MyNumber> number = service.getNumberById(id);
+	public EntityModel<NaturalNumber> getNumberById(@PathVariable long id) throws NumberNotFoundException {
+		Optional<NaturalNumber> number = service.getNumberById(id);
 		if(number.isPresent()) {
 			return assembler.toModel(number.get());
 		} else
@@ -88,11 +110,17 @@ public class NumbersController {
 	 * @param number - MyNumber entity 
 	 * @return  response entity with status code 201 and created number, wrapped in an entity model
 	 */
-	@PostMapping("/numbers")
+	@Operation(summary = "Save passed number", responses = {
+			@ApiResponse(description = "Number was created successfully", responseCode = "201", 
+					content = @Content(mediaType = "application/hal+json", schema = @Schema(implementation = EntityModel.class))),
+			@ApiResponse(description = "Internal Server Error.", responseCode = "500",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetails.class)))
+			})
+	@PostMapping
 	@PreAuthorize("hasAuthority('developers:write')")
-	public ResponseEntity<EntityModel<MyNumber>> addNewNumber(@RequestBody MyNumber number) {
-		MyNumber updatedNumber = service.saveNewNumber(number);
-		EntityModel<MyNumber> entityModel = assembler.toModel(updatedNumber);
+	public ResponseEntity<EntityModel<NaturalNumber>> addNewNumber(@RequestBody NaturalNumber number) {
+		NaturalNumber updatedNumber = service.saveNewNumber(number);
+		EntityModel<NaturalNumber> entityModel = assembler.toModel(updatedNumber);
 		
 		return ResponseEntity
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
@@ -105,11 +133,17 @@ public class NumbersController {
 	 * @param id - number identifier 
 	 * @return  response entity with status code 201 and created(or replaced if exists) number, wrapped in an entity model
 	 */
-	@PutMapping("/numbers/{id}")
+	@Operation(summary = "Either replace if exists or save passed number", responses = {
+			@ApiResponse(description = "Number was created successfully", responseCode = "201", 
+					content = @Content(mediaType = "application/hal+json", schema = @Schema(implementation = EntityModel.class))),
+			@ApiResponse(description = "Internal Server Error.", responseCode = "500",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetails.class)))
+			})
+	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('developers:write')")
-	public ResponseEntity<EntityModel<MyNumber>> replaceMyNumber(@RequestBody MyNumber newNumber, @PathVariable long id) {
-		MyNumber updatedNumber = service.replaceMyNymber(newNumber, id);
-		EntityModel<MyNumber> entityModel = assembler.toModel(updatedNumber);
+	public ResponseEntity<EntityModel<NaturalNumber>> replaceMyNumber(@RequestBody NaturalNumber newNumber, @PathVariable long id) {
+		NaturalNumber updatedNumber = service.replaceMyNymber(newNumber, id);
+		EntityModel<NaturalNumber> entityModel = assembler.toModel(updatedNumber);
 
 		return ResponseEntity
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
@@ -121,7 +155,12 @@ public class NumbersController {
 	 * @param id - number identifier 
 	 * @return  response entity with status code 204
 	 */
-	@DeleteMapping("/numbers/{id}")
+	@Operation(summary = "Delete the number", responses = {
+			@ApiResponse(description = "Number was deleted successfully", responseCode = "204"),
+			@ApiResponse(description = "Internal Server Error.", responseCode = "500",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetails.class)))
+			})
+	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('developers:write')")
 	public ResponseEntity<Object> deleteMyNumber(@PathVariable long id) {
 		service.deleteMyNumber(id);

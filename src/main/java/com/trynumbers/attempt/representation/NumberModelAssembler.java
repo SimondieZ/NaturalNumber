@@ -8,7 +8,7 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
 import com.trynumbers.attempt.controller.NumbersController;
-import com.trynumbers.attempt.entity.MyNumber;
+import com.trynumbers.attempt.entity.NaturalNumber;
 
 
 /**
@@ -17,7 +17,7 @@ import com.trynumbers.attempt.entity.MyNumber;
  * @author Serafim Sokhin
  */
 @Component
-public class NumberModelAssembler implements RepresentationModelAssembler<MyNumber, EntityModel<MyNumber>> {
+public class NumberModelAssembler implements RepresentationModelAssembler<NaturalNumber, EntityModel<NaturalNumber>> {
 
 	
 	/**
@@ -26,7 +26,7 @@ public class NumberModelAssembler implements RepresentationModelAssembler<MyNumb
 	 * @return entity model of MyNumber
 	 */
 	@Override
-	public EntityModel<MyNumber> toModel(MyNumber number) {
+	public EntityModel<NaturalNumber> toModel(NaturalNumber number) {
 		return EntityModel.of(number,
 				linkTo(methodOn(NumbersController.class).getNumberById(number.getId())).withSelfRel(),
 				linkTo(methodOn(NumbersController.class).getAllNumbers()).withRel("numbers"));
