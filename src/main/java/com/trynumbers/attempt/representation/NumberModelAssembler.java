@@ -31,5 +31,4 @@ public class NumberModelAssembler implements RepresentationModelAssembler<Natura
 				linkTo(methodOn(NumbersController.class).getNumberById(number.getId())).withSelfRel(),
 				linkTo(methodOn(NumbersController.class).getAllNumbers()).withRel("numbers"));
 	}
-
 }

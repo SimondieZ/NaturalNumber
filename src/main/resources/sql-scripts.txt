@@ -1,0 +1,11 @@
+
+	---- RESET TABLE SEQUENCES AND DELETE DATA FROM TABLES-----
+	
+DELETE FROM sochema.numbers;
+DELETE FROM sochema.users;
+
+ALTER SEQUENCE sochema.numbers_id_seq RESTART WITH 1;	
+UPDATE sochema.numbers SET id=nextval('sochema.numbers_id_seq');
+
+ALTER SEQUENCE sochema.users_id_seq RESTART WITH 1;	
+UPDATE sochema.users SET id=nextval('sochema.users_id_seq');

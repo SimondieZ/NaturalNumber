@@ -13,5 +13,4 @@ public class LoggingPointcuts {
 
 	@Pointcut("execution(* com.trynumbers.attempt.service..*(..))")
 	public void allServiceMethods() {}
-
 }

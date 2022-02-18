@@ -10,5 +10,4 @@ public class NumberNotFoundException extends RuntimeException{
 	public NumberNotFoundException(long id) {
 		super("Could not find the number " + id);
 	}
-
 }

@@ -211,6 +211,4 @@ public class NaturalNumber {
 		return "MyNumber [id=" + id + ", name=" + name + ", romaNotation=" + romaNotation + ", binaryNotation="
 				+ binaryNotation + ", description=" + description + ", divisors=" + Arrays.toString(divisors) + "]";
 	}
-
-
 }

@@ -55,5 +55,4 @@ public class NumberServiceImpl implements NumberService {
 	public void deleteMyNumber(long id) {
 		numRepos.deleteById(id);
 	}
-
 }

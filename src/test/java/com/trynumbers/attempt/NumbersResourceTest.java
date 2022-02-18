@@ -1,6 +1,5 @@
 package com.trynumbers.attempt;
 
-import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -19,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -103,7 +103,7 @@ public class NumbersResourceTest {
 		mvc.perform(MockMvcRequestBuilders.get("/api/v1/numbers/{id}", someId))
 				.andExpect(status().isNotFound())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$.message", is(errorMessage)));
+				.andExpect(jsonPath("$.message").value(errorMessage));
 	}
 	
     @Test
@@ -161,8 +161,21 @@ public class NumbersResourceTest {
 		verify(numberService).deleteMyNumber(numberIdToDelete);
 
 	}
-    
+	
+	@Test
+	@WithMockUser(authorities = "developers:write")
+	void givenNumber_whenDelete_thenStatus404() throws Exception {
+		
+		long numberIdToDelete = 3;	
+		String errorMessage = String.format("No %s entity with id %s exists!", NaturalNumber.class.getCanonicalName(), numberIdToDelete);
+		
+		Mockito.doThrow(new EmptyResultDataAccessException(errorMessage,1)).when(numberService).deleteMyNumber(numberIdToDelete);
+		mvc.perform(MockMvcRequestBuilders.delete("/api/v1/numbers/{id}", numberIdToDelete))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.message").value(errorMessage))
+				.andExpect(status().isNotFound());
+		verify(numberService).deleteMyNumber(numberIdToDelete);
 
-    
+	}
 }
 	
