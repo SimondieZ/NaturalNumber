@@ -27,8 +27,8 @@ public class NaturalNumber {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@Column(name = "name")
-	private long name;
+	@Column(name = "value")
+	private long value;
 	
 	@Column(name = "roma_notation")
 	private String romaNotation;
@@ -51,7 +51,7 @@ public class NaturalNumber {
 	private NaturalNumber(NumberBuilder myNumberBuilder) {
 		super();
 		this.id = myNumberBuilder.id;
-		this.name = myNumberBuilder.name;
+		this.value = myNumberBuilder.name;
 		this.romaNotation = myNumberBuilder.romaNotation;
 		this.binaryNotation = myNumberBuilder.binaryNotation;
 		this.description = myNumberBuilder.description;
@@ -105,13 +105,13 @@ public class NaturalNumber {
 		}
 
 	}
-	
-	public long getName() {
-		return name;
+
+	public long getValue() {
+		return value;
 	}
 
-	public void setName(long name) {
-		this.name = name;
+	public void setValue(long value) {
+		this.value = value;
 	}
 
 	public String getRomaNotation() {
@@ -166,7 +166,7 @@ public class NaturalNumber {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + Arrays.hashCode(divisors);
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + (int) (name ^ (name >>> 32));
+		result = prime * result + (int) (value ^ (value >>> 32));
 		result = prime * result + ((romaNotation == null) ? 0 : romaNotation.hashCode());
 		return result;
 	}
@@ -195,7 +195,7 @@ public class NaturalNumber {
 			return false;
 		if (id != other.id)
 			return false;
-		if (name != other.name)
+		if (value != other.value)
 			return false;
 		if (romaNotation == null) {
 			if (other.romaNotation != null)
@@ -208,7 +208,7 @@ public class NaturalNumber {
 
 	@Override
 	public String toString() {
-		return "MyNumber [id=" + id + ", name=" + name + ", romaNotation=" + romaNotation + ", binaryNotation="
+		return "MyNumber [id=" + id + ", value=" + value + ", romaNotation=" + romaNotation + ", binaryNotation="
 				+ binaryNotation + ", description=" + description + ", divisors=" + Arrays.toString(divisors) + "]";
 	}
 }

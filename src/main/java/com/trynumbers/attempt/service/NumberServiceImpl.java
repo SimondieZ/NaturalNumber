@@ -40,7 +40,7 @@ public class NumberServiceImpl implements NumberService {
 		Optional<NaturalNumber> optNumber = numRepos.findById(id);
 		if (optNumber.isPresent()) {
 			NaturalNumber number = optNumber.get();
-			number.setName(newNumber.getName());
+			number.setValue(newNumber.getValue());
 			number.setBinaryNotation(newNumber.getBinaryNotation());
 			number.setRomaNotation(newNumber.getRomaNotation());
 			number.setDescription(newNumber.getDescription());
