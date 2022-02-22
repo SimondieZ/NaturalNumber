@@ -1,4 +1,4 @@
-package com.trynumbers.attempt.security;
+package com.trynumbers.attempt.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.trynumbers.attempt.entity.User;
 import com.trynumbers.attempt.repository.UserRepository;
+import com.trynumbers.attempt.security.SecurityUser;
 
 /**
  * Loads user-specific data. 

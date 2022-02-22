@@ -19,7 +19,7 @@ import com.trynumbers.attempt.service.NumberService;
 import com.trynumbers.attempt.service.NumberServiceImpl;
 import com.trynumbers.utility.MyNumbersUtility;
 
-@SpringBootTest
+@SpringBootTest(classes = {NumberRepository.class, NumberService.class})
 @ExtendWith(MockitoExtension.class)
 public class NumberServiceLayerTest {
 

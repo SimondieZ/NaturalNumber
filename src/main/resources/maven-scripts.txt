@@ -1,0 +1,6 @@
+set JASYPT_ENCRYPTOR_PASSWORD=secretkey
+mvn spring-boot:run
+
+
+netstat -ao |find /i "listening"
+Taskkill /F /IM 12704
