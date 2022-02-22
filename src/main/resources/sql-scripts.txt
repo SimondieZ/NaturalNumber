@@ -9,3 +9,27 @@ UPDATE sochema.numbers SET id=nextval('sochema.numbers_id_seq');
 
 ALTER SEQUENCE sochema.users_id_seq RESTART WITH 1;	
 UPDATE sochema.users SET id=nextval('sochema.users_id_seq');
+
+CREATE SCHEMA github;
+CREATE TABLE github.numbers (
+    id bigserial NOT NULL,
+    value bigint NOT NULL,
+    binary_notation character varying,
+    roma_notation character varying,
+    description character varying,
+    divisors integer[],
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE github.users
+(
+    id bigserial NOT NULL,
+    email character varying(255) NOT NULL,
+    first_name character varying(50) NOT NULL,
+    last_name character varying(100),
+    password character varying(255) NOT NULL,
+    role character varying(20) NOT NULL DEFAULT 'USER',
+    status character varying(20) DEFAULT 'ACTIVE',
+    PRIMARY KEY (id),
+    UNIQUE (email)
+);

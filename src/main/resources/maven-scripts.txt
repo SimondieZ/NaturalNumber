@@ -4,3 +4,5 @@ mvn spring-boot:run
 
 netstat -ao |find /i "listening"
 Taskkill /F /IM 12704
+
+java -cp .m2/repository/org/jasypt/jasypt/1.9.3/jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input="sohin" password=secretkey algorithm=PBEWithMD5AndDES
