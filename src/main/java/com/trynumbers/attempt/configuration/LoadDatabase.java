@@ -21,7 +21,7 @@ public class LoadDatabase {
 	@Bean
 	CommandLineRunner initDatabase(NumberRepository numberRepository, UserRepository userRepository) {
 		return args -> {
-			if (numberRepository.findAll().isEmpty()) {
+			if (numberRepository.count() == 0) {
 				log.info("Preloading " + numberRepository.save(new NaturalNumber.NumberBuilder()
 						.name(1).romaNotation("I").binaryNotation("1")
 						.description("The most common leading digit in many sets of data, a consequence of Benford's law.")
@@ -72,16 +72,20 @@ public class LoadDatabase {
 								.romaNotation("X").binaryNotation("1010")
 								.description("The smallest number whose status as a possible friendly number is unknown.")
 								.divisors(new int[] { 1, 2, 5, 10 }).build()));
+			} else {
+				log.info("The table numbers does not need to be populated with data");
 			}
 			
-			if (userRepository.findAll().isEmpty()) {
+			if (userRepository.count() == 0) {
 				log.info("Preloading " + userRepository
 						.save(new User("admin@gmail.com", "$2a$12$Ynq7H74TUa9IKinHdwd0AOcxy3fnSkYrRftyu93nRRSyNmc4w76Zq",
 								"Admin", "Adminov", Role.ADMIN, Status.ACTIVE)));
 				log.info("Preloading " + userRepository
 						.save(new User("user@gmail.com", "$2a$12$65KN659/dtfOUEQvl/tVY.gUZy0chMR2ZzwIZ9jkFT0g/vh4kFwlu",
 								"User", "Userov", Role.USER, Status.ACTIVE)));
-			}
+			} else {
+				log.info("The table users does not need to be populated with data");
+			}	
 		};
 	}
 }
