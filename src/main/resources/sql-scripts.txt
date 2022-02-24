@@ -1,14 +1,14 @@
 
 	---- RESET TABLE SEQUENCES AND DELETE DATA FROM TABLES-----
 	
-DELETE FROM sochema.numbers;
-DELETE FROM sochema.users;
+DELETE FROM github.numbers;
+DELETE FROM github.users;
 
-ALTER SEQUENCE sochema.numbers_id_seq RESTART WITH 1;	
-UPDATE sochema.numbers SET id=nextval('sochema.numbers_id_seq');
+ALTER SEQUENCE github.numbers_id_seq RESTART WITH 1;	
+UPDATE github.numbers SET id=nextval('github.numbers_id_seq');
 
-ALTER SEQUENCE sochema.users_id_seq RESTART WITH 1;	
-UPDATE sochema.users SET id=nextval('sochema.users_id_seq');
+ALTER SEQUENCE github.users_id_seq RESTART WITH 1;	
+UPDATE github.users SET id=nextval('github.users_id_seq');
 
 CREATE SCHEMA github;
 CREATE TABLE github.numbers (

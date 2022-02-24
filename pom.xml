@@ -9,12 +9,12 @@
 		<version>2.6.3</version>
 		<relativePath />
 	</parent>
-	<groupId>com.trynumbers</groupId>
-	<artifactId>attempt</artifactId>
+	<groupId>com.simondiez</groupId>
+	<artifactId>springnumbers</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>attempt</name>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>11</java.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
 		<hibernate-types.version>2.14.0</hibernate-types.version>
 		<springdoc-openapi-ui.version>1.6.6</springdoc-openapi-ui.version>
