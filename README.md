@@ -1,6 +1,6 @@
 # Spring Boot REST API  with PostgreSQL Database
 
-Natural Numbers is a simple JSON based REST API using Spring Boot (version 2.6.3) and PostgreSQL as database.   
+Natural Numbers is a simple JSON-based REST API using Spring Boot (version 2.6.3) and PostgreSQL as database.   
 Provides such an information about natural numbers as divisors, representation of a number in Roman and binary notations, fact about the number from a mathematical point of view.
 
 # Technology stack
