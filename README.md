@@ -1,6 +1,6 @@
 # Spring Boot REST API  with PostgreSQL Database
 
-Natural Numbers is a simple JSON based REST API using Spring Boot (version 2.6.3) and PostgreSQL as database.   
+Natural Numbers is a simple JSON based on REST API using Spring Boot (version 2.6.3) and PostgreSQL as database.   
 Provides such an information about natural numbers as divisors, representation of a number in Roman and binary notations, fact about the number from a mathematical point of view.
 
 # Technology stack
@@ -18,16 +18,16 @@ Provides such an information about natural numbers as divisors, representation o
  
 # Prerequisites
 
-You need to install below software(s) before you begin with. If you have them already installed in your Machine, well and good.
+You need to install the following software(s) before you start working with the app. If you have them already installed in your Machine, then it's good.
     
    * JDK / JRE - Java 11 or later
    * Apach Maven - Install only when you build project outside of your IDE. IDE does come with built in Maven.
    * PostgreSQL
-   * IDE(optional) - Any one from below of your choice:
+   * IDE(optional) - Any options below:
        * Eclipse
        * IntelliJ IDEA
-   * HTTP Client to test REST Api (Any one from below of your choice):
-       * Postman - It also comes as Chrome extension.
+   * HTTP Client to test REST Api (Any options below):
+       * Postman 
        * Advanced REST Client - It also comes as Chrome extension.
         
 # How to Run
@@ -76,7 +76,7 @@ Below is an example of how we need to create these datatables using PostgreSQL a
 The data for the tables described above will be automatically once populated when the application starts. 
 
 ## 2. Clone the repository
-This application is packaged as a jar which has Apache Tomcat 9 embedded. Neither Tomcat or JBoss installation is necessary. 
+This application is packaged as a jar which has Apache Tomcat 9 embedded. Neither Tomcat nor JBoss installation is necessary. 
 
   *  Clone this repository
   *  Make sure you are using JDK 11 (or later), Maven 3.x and PostgreSQL
@@ -111,7 +111,7 @@ This application is packaged as a jar which has Apache Tomcat 9 embedded. Neithe
 
 ## 3. Set application.properties <a id="password"></a>
 
-The next thing we need to do is go to the application.properties (src\main\resources) and set some of your preferences:
+The next thing we need to do is to go to the application.properties (src\main\resources) and set some of your preferences:
 
 ```
 ## JPA
@@ -122,7 +122,7 @@ spring.datasource.url={your_datasource_url}
 spring.datasource.username={your_datasource_username}
 spring.datasource.password={encoded_password}
 ```
-It goes without saying that we can hard-code the password, but we'll do it a bit securely.  
+It goes without saying that we can hard-code the password, but we'll do it a bit more securely.  
 All we need is to execute one command from the root on the command line (for Windows OC)
 ```
 java -cp .m2/repository/org/jasypt/jasypt/1.9.3/jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input="real_password" password=your_secretkey algorithm=PBEWithMD5AndDES
@@ -186,7 +186,7 @@ After doing the above, the application is ready to use on port 8080.
 # About the Service
     
 If your database connection properties work, you can call some REST endpoints defined in com.simondiez.springnumbers.controller.NumbersController on port 8080 (see below).  
-The Natural Numbers API lives at the route /api/v1/numbers. If your application is running on localhost:8080, you would access the API via http://localhost:8080/api/v1/numbers. 
+The Natural Numbers API lives at the route /api/v1/numbers. If your application is running on localhost:8080, you will access the API via http://localhost:8080/api/v1/numbers. 
 Moreover, the request requires authorization(Basic Auth). 
 
 </details>
