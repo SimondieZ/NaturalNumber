@@ -109,7 +109,14 @@ This application is packaged as a jar which has Apache Tomcat 9 embedded. Neithe
 ```
 </details>
 
-## 3. Set application.properties <a id="password"></a>
+## 3. Compile project
+
+Maven  needs to download all the plugins and related dependencies. Just execute the following command:
+```
+mvn compile
+```
+
+## 4. Set application.properties <a id="password"></a>
 
 The next thing we need to do is to go to the application.properties (src\main\resources) and set some of your preferences:
 
@@ -123,7 +130,7 @@ spring.datasource.username={your_datasource_username}
 spring.datasource.password={encoded_password}
 ```
 It goes without saying that we can hard-code the password, but we'll do it a bit more securely.  
-All we need is to execute one command from the root on the command line (for Windows OC)
+All we need is to execute the following command from the home directory on the command line (for Windows OC)
 ```
 java -cp .m2/repository/org/jasypt/jasypt/1.9.3/jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input="real_password" password=your_secretkey algorithm=PBEWithMD5AndDES
 ```
@@ -161,7 +168,7 @@ After executing this command, the response will look something like this.
 
 Copy and paste the encoded password from --OUTPUT---- section to [`spring.datasource.password={encoded_password}`](#password) property.
 
-## 4. Build and Run
+## 5. Build and Run
 You can build the project and run the tests by running mvn clean package.    
 Once successfully built, you can run the service by one of these two methods:  
 
