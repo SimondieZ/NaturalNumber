@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simondiez.springnumbers.controller.NumbersController;
 import com.simondiez.springnumbers.entity.NaturalNumber;
+import com.simondiez.springnumbers.exceptions.NumberNotFoundException;
 import com.simondiez.springnumbers.representation.NumberModelAssembler;
 import com.simondiez.springnumbers.service.NumberService;
 import com.simondiez.utility.MyNumbersUtility;
@@ -47,7 +48,7 @@ public class NumbersResourceTest {
 	private UserDetailsService userDetailsService;
 
 	@Autowired
-	private MockMvc mvc;
+	private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -61,10 +62,11 @@ public class NumbersResourceTest {
 		
 		when(numberService.getAllNumbers()).thenReturn(numbers);
 		
-		mvc.perform(MockMvcRequestBuilders.get("/api/v1/numbers"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/numbers"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaTypes.HAL_JSON))
-				.andExpect(jsonPath("$._embedded.naturalNumberList", Matchers.hasSize(3)));	
+				.andExpect(jsonPath("$._embedded.naturalNumberList", Matchers.hasSize(numbers.size())));	
+		
 	}
 	
 	@Test
@@ -78,7 +80,7 @@ public class NumbersResourceTest {
 
 		when(numberService.getNumberById(numberId)).thenReturn(Optional.of(numberThree));
 		
-		mvc.perform(MockMvcRequestBuilders.get("/api/v1/numbers/{id}", numberId))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/numbers/{id}", numberId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaTypes.HAL_JSON))
                 .andExpect(jsonPath("$.id").value((int)numberId))
@@ -87,7 +89,7 @@ public class NumbersResourceTest {
                 .andExpect(jsonPath("$.binaryNotation").value(numberThree.getBinaryNotation()))
                 .andExpect(jsonPath("$.description").value(numberThree.getDescription()))
                 .andExpect(jsonPath("$.divisors").value(array));
-			
+		
 	}
 	
 	@Test
@@ -96,14 +98,16 @@ public class NumbersResourceTest {
 		
 		long someId = 3;
 		
-		String errorMessage = "Could not find the number " + someId;
+		NumberNotFoundException exeption = new NumberNotFoundException(someId);
+		String errorMessage = exeption.getMessage();
 		
 		when(numberService.getNumberById(someId)).thenReturn(Optional.empty());
 		
-		mvc.perform(MockMvcRequestBuilders.get("/api/v1/numbers/{id}", someId))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/numbers/{id}", someId))
 				.andExpect(status().isNotFound())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.message").value(errorMessage));
+		
 	}
 	
     @Test
@@ -113,13 +117,14 @@ public class NumbersResourceTest {
     	NaturalNumber numberThree = MyNumbersUtility.createMyNumberInstance();
 		
         when(numberService.saveNewNumber(Mockito.any(NaturalNumber.class))).thenReturn(numberThree);
-        mvc.perform(MockMvcRequestBuilders.post("/api/v1/numbers")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/numbers")
                         .content(objectMapper.writeValueAsString(numberThree))
                         .contentType(MediaType.APPLICATION_JSON)
                    )
 	                .andExpect(status().isCreated())
 	                .andExpect(content().contentType(MediaTypes.HAL_JSON))
 	                .andExpect(content().json(objectMapper.writeValueAsString(numberThree)));
+        
     }
 
     @Test
@@ -127,7 +132,7 @@ public class NumbersResourceTest {
     void giveNumber_whenUpdate_thenStatus201andUpdatedReturns() throws Exception {
     		
     	NaturalNumber rewritableNumber = new NaturalNumber.NumberBuilder()							// without id (to create or replace)
-				.name(3)
+				.value(3)
 				.romaNotation("III")
 				.binaryNotation("3")
 				.description("The first unique prime due to the properties of its reciprocal.")
@@ -138,7 +143,7 @@ public class NumbersResourceTest {
 		
         when(numberService.replaceMyNymber(rewritableNumber, 3)).thenReturn(getFromDataBaseNumber);
         
-        mvc.perform(MockMvcRequestBuilders.put("/api/v1/numbers/{id}", 3)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/numbers/{id}", 3)
                         .content(objectMapper.writeValueAsString(rewritableNumber))
                         .contentType(MediaType.APPLICATION_JSON)
                    )
@@ -149,6 +154,7 @@ public class NumbersResourceTest {
 	                .andExpect(jsonPath("$.binaryNotation").value(rewritableNumber.getBinaryNotation()))
 	                .andExpect(jsonPath("$.description").value(rewritableNumber.getDescription()))
 	                .andExpect(jsonPath("$.divisors").value(MyNumbersUtility.convertToJsonArray(rewritableNumber.getDivisors())));
+        
     }
     
 	@Test
@@ -156,10 +162,9 @@ public class NumbersResourceTest {
 	void givenNumber_whenDelete_thenStatus204() throws Exception {
 
 		long numberIdToDelete = 3;
-		mvc.perform(MockMvcRequestBuilders.delete("/api/v1/numbers/{id}", numberIdToDelete))
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/numbers/{id}", numberIdToDelete))
 				.andExpect(status().isNoContent());
 		verify(numberService).deleteMyNumber(numberIdToDelete);
-
 	}
 	
 	@Test
@@ -170,12 +175,14 @@ public class NumbersResourceTest {
 		String errorMessage = String.format("No %s entity with id %s exists!", NaturalNumber.class.getCanonicalName(), numberIdToDelete);
 		
 		Mockito.doThrow(new EmptyResultDataAccessException(errorMessage,1)).when(numberService).deleteMyNumber(numberIdToDelete);
-		mvc.perform(MockMvcRequestBuilders.delete("/api/v1/numbers/{id}", numberIdToDelete))
+		
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/numbers/{id}", numberIdToDelete))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.message").value(errorMessage))
 				.andExpect(status().isNotFound());
+		
 		verify(numberService).deleteMyNumber(numberIdToDelete);
-
+		
 	}
 }
 	

@@ -13,7 +13,7 @@ public class MyNumbersUtility {
 	public static NaturalNumber createMyNumberInstance() {
 		NaturalNumber number = new NaturalNumber.NumberBuilder()
 				.id(3)
-				.name(3)
+				.value(3)
 				.romaNotation("III")
 				.binaryNotation("3")
 				.description("The first unique prime due to the properties of its reciprocal.")
@@ -35,7 +35,7 @@ public class MyNumbersUtility {
 		
 		numbers.add(new NaturalNumber.NumberBuilder()
 				.id(1)
-				.name(1)
+				.value(1)
 				.romaNotation("I")
 				.binaryNotation("1")
 				.description("The most common leading digit in many sets of data, a consequence of Benford's law.")
@@ -43,14 +43,14 @@ public class MyNumbersUtility {
 				.build());
 		numbers.add(new NaturalNumber.NumberBuilder()
 				.id(2)
-				.name(2)
+				.value(2)
 				.romaNotation("II")
 				.binaryNotation("10")
 				.description("The third Fibonacci number, and the third and fifth Perrin numbers.")
 				.divisors(new int[] {1,2})
 				.build());
 		numbers.add(new NaturalNumber.NumberBuilder()
-				.name(3)
+				.value(3)
 				.romaNotation("III")
 				.binaryNotation("3")
 				.description("The first unique prime due to the properties of its reciprocal.")

@@ -17,41 +17,38 @@ import com.vladmihalcea.hibernate.type.array.IntArrayType;
 
 @Entity
 @Table(name = "numbers")
-@TypeDefs({
-	@TypeDef(name = "int-array", typeClass = IntArrayType.class)
-})
+@TypeDefs({ @TypeDef(name = "int-array", typeClass = IntArrayType.class) })
 public class NaturalNumber {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	@Column(name = "value")
 	private long value;
-	
+
 	@Column(name = "roma_notation")
 	private String romaNotation;
-	
+
 	@Column(name = "binary_notation")
 	private String binaryNotation;
-	
+
 	@Column(name = "description")
 	private String description;
-	
+
 	@Type(type = "int-array")
 	@Column(name = "divisors", columnDefinition = "integer[]")
 	private int[] divisors;
-	
 
 	protected NaturalNumber() {
 		super();
 	}
-	
+
 	private NaturalNumber(NumberBuilder myNumberBuilder) {
 		super();
 		this.id = myNumberBuilder.id;
-		this.value = myNumberBuilder.name;
+		this.value = myNumberBuilder.value;
 		this.romaNotation = myNumberBuilder.romaNotation;
 		this.binaryNotation = myNumberBuilder.binaryNotation;
 		this.description = myNumberBuilder.description;
@@ -60,7 +57,7 @@ public class NaturalNumber {
 
 	public static class NumberBuilder {
 		private long id;
-		private long name;
+		private long value;
 		private String romaNotation;
 		private String binaryNotation;
 		private String description;
@@ -74,8 +71,8 @@ public class NaturalNumber {
 			return this;
 		}
 
-		public NumberBuilder name(long name) {
-			this.name = name;
+		public NumberBuilder value(long value) {
+			this.value = value;
 			return this;
 		}
 
@@ -138,7 +135,6 @@ public class NaturalNumber {
 		this.description = description;
 	}
 
-
 	public long getId() {
 		return id;
 	}
@@ -147,16 +143,13 @@ public class NaturalNumber {
 		this.id = id;
 	}
 
-
 	public int[] getDivisors() {
 		return divisors;
 	}
 
-
 	public void setDivisors(int[] divisors) {
 		this.divisors = divisors;
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -170,7 +163,6 @@ public class NaturalNumber {
 		result = prime * result + ((romaNotation == null) ? 0 : romaNotation.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -204,7 +196,6 @@ public class NaturalNumber {
 			return false;
 		return true;
 	}
-
 
 	@Override
 	public String toString() {

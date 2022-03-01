@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import com.simondiez.springnumbers.controller.NumbersController;
 import com.simondiez.springnumbers.entity.NaturalNumber;
 
-
 /**
  * Class for components that convert MyNumber type into a RepresentationModel.
  * 
@@ -19,9 +18,9 @@ import com.simondiez.springnumbers.entity.NaturalNumber;
 @Component
 public class NumberModelAssembler implements RepresentationModelAssembler<NaturalNumber, EntityModel<NaturalNumber>> {
 
-	
 	/**
 	 * Wraps MyNumber into EntityModel type.
+	 * 
 	 * @param number MyNumber entity
 	 * @return entity model of MyNumber
 	 */

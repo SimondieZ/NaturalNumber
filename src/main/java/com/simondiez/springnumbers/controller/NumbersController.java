@@ -48,14 +48,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @Tag(name = "Number")
 public class NumbersController {
 
-	private final NumberService service;
+	private final NumberService numberService;
 
-	private final NumberModelAssembler assembler;
+	private final NumberModelAssembler numberModelAssembler;
 
 	@Autowired
-	public NumbersController(NumberService service, NumberModelAssembler assembler) {
-		this.service = service;
-		this.assembler = assembler;
+	public NumbersController(NumberService numberService, NumberModelAssembler numberModelAssembler) {
+		this.numberService = numberService;
+		this.numberModelAssembler = numberModelAssembler;
 	}
 
 
@@ -71,10 +71,12 @@ public class NumbersController {
 	@GetMapping
 	@PreAuthorize("hasAuthority('developers:read')")
 	public CollectionModel<EntityModel<NaturalNumber>> getAllNumbers() {
-		List<NaturalNumber> allNumbers = service.getAllNumbers();
+		List<NaturalNumber> allNumbers = numberService.getAllNumbers();
+		
 		List<EntityModel<NaturalNumber>> listOfHateOasNumbers = allNumbers.stream()
-				.map(assembler::toModel)
+				.map(numberModelAssembler::toModel)
 				.collect(Collectors.toList());
+		
 		return CollectionModel.of(listOfHateOasNumbers,
 				linkTo(methodOn(NumbersController.class).getAllNumbers()).withSelfRel());
 	}
@@ -97,11 +99,12 @@ public class NumbersController {
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAuthority('developers:read')")
 	public EntityModel<NaturalNumber> getNumberById(@PathVariable long id) {
-		Optional<NaturalNumber> number = service.getNumberById(id);
-		if(number.isPresent()) {
-			return assembler.toModel(number.get());
+		Optional<NaturalNumber> number = numberService.getNumberById(id);
+
+		if (number.isPresent()) {
+			return numberModelAssembler.toModel(number.get());
 		} else
-			throw new NumberNotFoundException(id);	
+			throw new NumberNotFoundException(id);
 	}
 
 	/**
@@ -119,9 +122,9 @@ public class NumbersController {
 	@PostMapping
 	@PreAuthorize("hasAuthority('developers:write')")
 	public ResponseEntity<EntityModel<NaturalNumber>> addNewNumber(@RequestBody NaturalNumber number) {
-		NaturalNumber updatedNumber = service.saveNewNumber(number);
-		EntityModel<NaturalNumber> entityModel = assembler.toModel(updatedNumber);
-		
+		NaturalNumber updatedNumber = numberService.saveNewNumber(number);
+		EntityModel<NaturalNumber> entityModel = numberModelAssembler.toModel(updatedNumber);
+
 		return ResponseEntity
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
 	}
@@ -142,8 +145,8 @@ public class NumbersController {
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('developers:write')")
 	public ResponseEntity<EntityModel<NaturalNumber>> replaceMyNumber(@RequestBody NaturalNumber newNumber, @PathVariable long id) {
-		NaturalNumber updatedNumber = service.replaceMyNymber(newNumber, id);
-		EntityModel<NaturalNumber> entityModel = assembler.toModel(updatedNumber);
+		NaturalNumber updatedNumber = numberService.replaceMyNymber(newNumber, id);
+		EntityModel<NaturalNumber> entityModel = numberModelAssembler.toModel(updatedNumber);
 
 		return ResponseEntity
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
@@ -163,7 +166,7 @@ public class NumbersController {
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('developers:write')")
 	public ResponseEntity<Object> deleteMyNumber(@PathVariable long id) {
-		service.deleteMyNumber(id);
+		numberService.deleteMyNumber(id);
 		return ResponseEntity.noContent().build();
 	}
 }

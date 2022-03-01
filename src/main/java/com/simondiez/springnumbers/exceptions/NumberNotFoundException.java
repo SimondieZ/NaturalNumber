@@ -1,10 +1,7 @@
 package com.simondiez.springnumbers.exceptions;
 
-public class NumberNotFoundException extends RuntimeException{
+public class NumberNotFoundException extends RuntimeException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public NumberNotFoundException(long id) {

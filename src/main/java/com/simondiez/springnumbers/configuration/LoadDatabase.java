@@ -23,52 +23,52 @@ public class LoadDatabase {
 		return args -> {
 			if (numberRepository.count() == 0) {
 				log.info("Preloading " + numberRepository.save(new NaturalNumber.NumberBuilder()
-						.name(1).romaNotation("I").binaryNotation("1")
+						.value(1).romaNotation("I").binaryNotation("1")
 						.description("The most common leading digit in many sets of data, a consequence of Benford's law.")
 						.divisors(new int[] { 1 }).build()));
 				log.info("Preloading " + numberRepository
 						.save(new NaturalNumber.NumberBuilder()
-								.name(2).romaNotation("II").binaryNotation("10")
+								.value(2).romaNotation("II").binaryNotation("10")
 								.description("The third Fibonacci number, and the third and fifth Perrin numbers.")
 								.divisors(new int[] { 1, 2 }).build()));
 				log.info("Preloading " + numberRepository
 						.save(new NaturalNumber.NumberBuilder()
-								.name(3).romaNotation("III").binaryNotation("11")
+								.value(3).romaNotation("III").binaryNotation("11")
 								.description("The first unique prime due to the properties of its reciprocal.")
 								.divisors(new int[] { 1, 3 }).build()));
 				log.info("Preloading " + numberRepository
 						.save(new NaturalNumber.NumberBuilder()
-								.name(4).romaNotation("IV")
+								.value(4).romaNotation("IV")
 								.binaryNotation("100").description("The first positive non-Fibonacci number.")
 								.divisors(new int[] { 1, 2, 4 }).build()));
 				log.info("Preloading " + numberRepository
 						.save(new NaturalNumber.NumberBuilder()
-								.name(5).romaNotation("V").binaryNotation("101")
+								.value(5).romaNotation("V").binaryNotation("101")
 								.description("The third prime number.")
 								.divisors(new int[] { 1, 5 }).build()));
 				log.info("Preloading " + numberRepository
 						.save(new NaturalNumber.NumberBuilder()
-								.name(6).romaNotation("VI").binaryNotation("110")
+								.value(6).romaNotation("VI").binaryNotation("110")
 								.description("The largest of the four all-Harshad numbers.")
 								.divisors(new int[] { 1, 2, 3, 6 }).build()));
 				log.info("Preloading " + numberRepository
 						.save(new NaturalNumber.NumberBuilder()
-								.name(7).romaNotation("VII").binaryNotation("111")
+								.value(7).romaNotation("VII").binaryNotation("111")
 								.description("The sum of any two opposite sides on a standard six-sided die.")
 								.divisors(new int[] { 1, 7 }).build()));
 				log.info("Preloading " + numberRepository
 						.save(new NaturalNumber.NumberBuilder()
-								.name(8).romaNotation("VIII").binaryNotation("1000")
+								.value(8).romaNotation("VIII").binaryNotation("1000")
 								.description("The largest cube in the Fibonacci sequence.")
 								.divisors(new int[] { 1, 2, 4, 8 }).build()));
 				log.info("Preloading " + numberRepository
 						.save(new NaturalNumber.NumberBuilder()
-								.name(9).romaNotation("IX").binaryNotation("1001")
+								.value(9).romaNotation("IX").binaryNotation("1001")
 								.description("The highest single-digit number in the decimal system.")
 								.divisors(new int[] { 1, 3, 9 }).build()));
 				log.info("Preloading " + numberRepository
 						.save(new NaturalNumber.NumberBuilder()
-								.name(10)
+								.value(10)
 								.romaNotation("X").binaryNotation("1010")
 								.description("The smallest number whose status as a possible friendly number is unknown.")
 								.divisors(new int[] { 1, 2, 5, 10 }).build()));

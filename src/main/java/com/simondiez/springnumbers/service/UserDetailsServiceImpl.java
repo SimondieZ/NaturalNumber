@@ -11,7 +11,8 @@ import com.simondiez.springnumbers.repository.UserRepository;
 import com.simondiez.springnumbers.security.SecurityUser;
 
 /**
- * Loads user-specific data. 
+ * Loads user-specific data.
+ * 
  * @author Serafim Sokhin
  */
 @Service

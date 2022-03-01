@@ -73,25 +73,24 @@ public class LoggingHandler {
     /**
      * Advice that logs in detail when any method @Service annotated class is entered and exited.
      *
-     * @param proceedingJP ProceedingJoinPoint for advice
+     * @param joinPoint ProceedingJoinPoint for advice
      * @return target method result
      * @throws Throwable caught Exception 
      */
 	@Around("LoggingPointcuts.allServiceMethods()")
-	public Object logAroundAllServiceMethods(ProceedingJoinPoint proceedingJP) throws Throwable {
+	public Object logAroundAllServiceMethods(ProceedingJoinPoint joinPoint) throws Throwable {
 		log.debug("------------------------------------------------------------");
-		Object targetMethodResult = null;
 
-		MethodSignature methodSignature = (MethodSignature) proceedingJP.getSignature();
+		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
 		log.debug("Entering in Method :  " + methodSignature.getName());
 		log.debug("Method signature: " + methodSignature.getMethod());
-		log.debug("Argument[s] :  " + Arrays.toString(proceedingJP.getArgs()));
-		log.debug("Target class : " + proceedingJP.getTarget().getClass().getName());
+		log.debug("Argument[s] :  " + Arrays.toString(joinPoint.getArgs()));
+		log.debug("Target class : " + joinPoint.getTarget().getClass().getName());
 
 		try {
 			log.debug("Method " + methodSignature.getName() + " is trying to start...");
 			long begin = System.currentTimeMillis();
-			targetMethodResult = proceedingJP.proceed();
+			Object targetMethodResult = joinPoint.proceed();
 			long end = System.currentTimeMillis();
 
 			if (!methodSignature.getName().equals("deleteMyNumber"))
@@ -99,12 +98,13 @@ public class LoggingHandler {
 
 			log.debug("Method " + methodSignature.getName() + " has completed successfully!");
 			log.debug("Method execution time: " + (end - begin) + "ms");
+			
+			return targetMethodResult;
 		} catch (Exception e) {
 			log.warn("Method " + methodSignature.getName() + " has completed unsuccessfully!");
 			throw e;
 		} finally {
 			log.debug("------------------------------------------------------------");
 		}
-		return targetMethodResult;
 	}
 }
