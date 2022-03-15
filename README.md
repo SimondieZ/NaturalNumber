@@ -21,7 +21,7 @@ Provides such an information about natural numbers as divisors, representation o
 You need to install the following software(s) before you start working with the app. If you have them already installed in your Machine, then it's good.
     
    * JDK / JRE - Java 11 or later
-   * Apach Maven - Install only when you build project outside of your IDE. IDE does come with built in Maven.
+   * Apache Maven - Install only when you build project outside of your IDE. IDE does come with built in Maven.
    * PostgreSQL
    * IDE(optional) - Any options below:
        * Eclipse
